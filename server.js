@@ -33,7 +33,8 @@ app.use(session({
 }));
 
 
-mongo.connect(process.env.DATABASE,{ useUnifiedTopology: true }, (err, db) => {
+mongo.connect(process.env.DATABASE,{ useUnifiedTopology: true }, (err, client) => {
+  let db = client.db('socketIO');
     if(err) console.log('Database error: ' + err);
   
     auth(app, db);
