@@ -39,6 +39,7 @@ app.use(session({
 }));
 
 
+
 mongo.connect(process.env.DATABASE,{ useUnifiedTopology: true }, (err, client) => {
   let db = client.db('socketIO');
     if(err) console.log('Database error: ' + err);
@@ -56,6 +57,13 @@ mongo.connect(process.env.DATABASE,{ useUnifiedTopology: true }, (err, client) =
   
     //start socket.io code  
 
+    io.use(passportSocketIO.authorize({
+      cookieParser: cookieParser,
+      key: 'express.sid',
+      secret: process.env.SESSION_SECRET,
+      store: sessionStore
+    
+    }))
     // The first thing needing to be handled is listening for a new connection from the client. The on keyword does just that- listen for a specific event
 
     // It requires 2 arguments: a string containing the title of the event thats emitted, and a function with which the data is passed though.
@@ -63,7 +71,7 @@ mongo.connect(process.env.DATABASE,{ useUnifiedTopology: true }, (err, client) =
     var currentUsers = 0;
 
     io.on('connection', socket => {
-      console.log('A user has connected');
+      console.log("User " +socket.request.user.name + " has connected");
       ++currentUsers;
       io.emit('user count', currentUsers)
 
