@@ -1,3 +1,6 @@
+/*global io*/
+var socket = io();
+
 $( document ).ready(function() {
   
   

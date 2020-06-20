@@ -53,10 +53,10 @@ mongo.connect(process.env.DATABASE,{ useUnifiedTopology: true }, (err, db) => {
 
     // It requires 2 arguments: a string containing the title of the event thats emitted, and a function with which the data is passed though.
 
-    // io.on('connection', socket => {
-    //   console.log('A user has connected');
+    io.on('connection', socket => {
+      console.log('A user has connected');
       
-    // })
+    })
 
 
   
