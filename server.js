@@ -8,6 +8,7 @@ const auth        = require('./app/auth.js');
 const routes      = require('./app/routes.js');
 const mongo       = require('mongodb').MongoClient;
 const passport    = require('passport');
+const passportSocketIO = require('passport.socketio');
 const cookieParser= require('cookie-parser')
 const app         = express();
 const http        = require('http').Server(app);
@@ -17,6 +18,7 @@ const io = require('socket.io')(http);
 
 
 fccTesting(app); //For FCC testing purposes
+
 
 const cors = require('cors');
 
@@ -61,11 +63,16 @@ mongo.connect(process.env.DATABASE,{ useUnifiedTopology: true }, (err, client) =
     var currentUsers = 0;
 
     io.on('connection', socket => {
+      console.log('A user has connected');
       ++currentUsers;
       io.emit('user count', currentUsers)
-      console.log('A user has connected');
 
-  
+      socket.on('disconnect', ()=>{
+        console.log('A user has disconnected');
+        --currentUsers;
+        io.emit('user count', currentUsers)
+        
+      })
       
     })
 
