@@ -18,6 +18,10 @@ const io = require('socket.io')(http);
 
 fccTesting(app); //For FCC testing purposes
 
+const cors = require('cors');
+
+app.use(cors());
+
 app.use('/public', express.static(process.cwd() + '/public'));
 app.use(cookieParser());
 app.use(bodyParser.json());
@@ -54,8 +58,14 @@ mongo.connect(process.env.DATABASE,{ useUnifiedTopology: true }, (err, client) =
 
     // It requires 2 arguments: a string containing the title of the event thats emitted, and a function with which the data is passed though.
 
+    var currentUsers = 0;
+
     io.on('connection', socket => {
+      ++currentUsers;
+      io.emit('user count', currentUsers)
       console.log('A user has connected');
+
+  
       
     })
 
